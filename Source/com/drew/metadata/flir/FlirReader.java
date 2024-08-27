@@ -57,6 +57,13 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
         }
     }
 
+    /**
+     * Verify the beginning of the image file
+     *
+     * @param segmentBytes
+     * @param preamble
+     * @return
+     */
     private static boolean startsWith(byte[] segmentBytes, byte[] preamble) {
         return segmentBytes.length >= preamble.length && Arrays.equals(Arrays.copyOfRange(segmentBytes, 0, preamble.length), preamble);
     }
@@ -64,14 +71,16 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
     @Override
     public void extract(RandomAccessReader reader, Metadata metadata) {
         try {
-            if (!new String(reader.getBytes(0, PREAMBLE_BYTES.length)).equals("FFF\0")) {
+            if (!flirTemperatureDataStartsWith(reader.getBytes(0, 4), new byte[]{(byte) 'F', (byte) 'F', (byte) 'F', 0})) {
                 FlirHeaderDirectory directory = new FlirHeaderDirectory();
                 directory.addError("Unexpected FFF header bytes.");
                 metadata.addDirectory(directory);
+                return;
             }
             FlirHeaderDirectory directory = new FlirHeaderDirectory();
+            directory.setStringValue(FlirHeaderDirectory.TAG_CREATOR_SOFTWARE, reader.getNullTerminatedStringValue(4, 16, null));
             metadata.addDirectory(directory);
-            directory.setInt(FlirHeaderDirectory.TAG_CREATOR_SOFTWARE, reader.getInt32(4));
+
             long baseIndexOffset = reader.getUInt32(24);
             long indexCount = reader.getUInt32(28);
             if (baseIndexOffset < Integer.MIN_VALUE || baseIndexOffset > Integer.MAX_VALUE) {
@@ -195,6 +204,13 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
 
     }
 
+    /**
+     * Verify the beginning of the image
+     *
+     * @param data
+     * @param prefix
+     * @return
+     */
     private static boolean flirTemperatureDataStartsWith(byte[] data, byte[] prefix) {
         if (data.length < prefix.length) return false;
         for (int i = 0; i < prefix.length; i++) {
