@@ -83,17 +83,15 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
 
             long baseIndexOffset = reader.getUInt32(24);
             long indexCount = reader.getUInt32(28);
-            if (baseIndexOffset < Integer.MIN_VALUE || baseIndexOffset > Integer.MAX_VALUE) {
-                throw new ArithmeticException("Value is out of the range of int.");
-            }
-            for (int i = 0; i < indexCount; i++) {
+            int indexOffset = checkedToInt(baseIndexOffset);
 
-                FlirMainTagType mainType = FlirMainTagType.fromValue(reader.getUInt16((int) baseIndexOffset));
-                int subType = reader.getUInt16((int) (baseIndexOffset + 2));
-                long version = reader.getUInt32((int) (baseIndexOffset + 4));
-                long id = reader.getUInt32((int) (baseIndexOffset + 8));
-                int dataOffset = reader.getInt32((int) (baseIndexOffset + 12));
-                int dataLength = reader.getInt32((int) (baseIndexOffset + 16));
+            for (int i = 0; i < indexCount; i++) {
+                FlirMainTagType mainType = FlirMainTagType.fromValue(reader.getUInt16(indexOffset));
+                int subType = reader.getUInt16(indexOffset + 2);
+                long version = reader.getUInt32(indexOffset + 4);
+                long id = reader.getUInt32(indexOffset + 8);
+                int dataOffset = reader.getInt32(indexOffset + 12);
+                int dataLength = reader.getInt32(indexOffset + 16);
                 if (mainType == FlirMainTagType.PIXELS) {
                     RandomAccessReader reader2 = reader.WithShiftedBaseOffset(dataOffset);
                     short int16 = reader2.getInt16(0);
@@ -101,13 +99,15 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
                         reader2 = reader2.WithByteOrder(!reader2.isMotorolaByteOrder());
                     FlirRawDataDirectory rawDataDirectory = new FlirRawDataDirectory();
 
-                    rawDataDirectory.setInt(TAG_RAW_THERMAL_IMAGE_WIDTH, reader2.getInt16(TAG_RAW_THERMAL_IMAGE_WIDTH));
-                    rawDataDirectory.setInt(TAG_RAW_THERMAL_IMAGE_HEIGHT, reader2.getInt16(TAG_RAW_THERMAL_IMAGE_HEIGHT));
+                    int width = reader2.getInt16(TAG_RAW_THERMAL_IMAGE_WIDTH);
+                    int height = reader2.getInt16(TAG_RAW_THERMAL_IMAGE_HEIGHT);
+
+                    rawDataDirectory.setInt(TAG_RAW_THERMAL_IMAGE_WIDTH, width);
+                    rawDataDirectory.setInt(TAG_RAW_THERMAL_IMAGE_HEIGHT, height);
                     if (ExtractRawThermalImage) {
                         rawDataDirectory.setByteArray(TAG_RAW_THERMAL_IMAGE, reader2.getBytes(32, dataLength - 32));
                         byte[] thermalImageData = reader2.getBytes(32, dataLength - 32);
-                        int width = reader2.getInt16(TAG_RAW_THERMAL_IMAGE_WIDTH);
-                        int height = reader2.getInt16(TAG_RAW_THERMAL_IMAGE_HEIGHT);
+
                         if (flirTemperatureDataStartsWith(thermalImageData, new byte[]{(byte) 0x89, 'P', 'N', 'G', '\r', '\n', (byte) 0x1A, '\n'})) {
                             rawDataDirectory.setString(TAG_RAW_THERMAL_IMAGE_TYPE, "PNG");
                         } else if (startsWith(thermalImageData, new byte[]{(byte) 0xFF, (byte) 0xD8, (byte) 0xFF})) {
@@ -196,7 +196,7 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
                     infoDirectory.setInt(TAG_FRAME_RATE, reader3.getUInt16(TAG_FRAME_RATE));
                     metadata.addDirectory(infoDirectory);
                 }
-                baseIndexOffset += 32;
+                indexOffset += 32;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -217,5 +217,18 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
             if (data[i] != prefix[i]) return false;
         }
         return true;
+    }
+
+    /**
+     * 转换为 int，处理溢出
+     *
+     * @param value
+     * @return
+     */
+    private static int checkedToInt(long value) {
+        if (value < Integer.MIN_VALUE || value > Integer.MAX_VALUE) {
+            throw new ArithmeticException("Value is out of the range of int.");
+        }
+        return (int) value;
     }
 }

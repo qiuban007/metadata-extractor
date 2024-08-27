@@ -11,8 +11,6 @@ public enum FlirMainTagType {
     COARSE_MAP((short) 6),
     IMAGE_MAP((short) 7),
 
-    // FLIR matrix tags
-
     BASIC_DATA((short) 0x20),
     MEASURE((short) 0x21),
     COLOR_PAL((short) 0x22);
