@@ -27,6 +27,7 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.adobe.AdobeJpegReader;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.file.FileSystemMetadataReader;
+import com.drew.metadata.flir.FlirReader;
 import com.drew.metadata.icc.IccReader;
 import com.drew.metadata.iptc.IptcReader;
 import com.drew.metadata.jfif.JfifReader;
@@ -67,7 +68,8 @@ public class JpegMetadataReader
             new IptcReader(),
             new AdobeJpegReader(),
             new JpegDhtReader(),
-            new JpegDnlReader()
+            new JpegDnlReader(),
+            new FlirReader()
     );
 
     @NotNull

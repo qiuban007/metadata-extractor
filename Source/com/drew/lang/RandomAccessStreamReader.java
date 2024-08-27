@@ -83,6 +83,16 @@ public class RandomAccessStreamReader extends RandomAccessReader
         return _streamLength;
     }
 
+    @Override
+    public RandomAccessReader WithShiftedBaseOffset(int shift) {
+        return null;
+    }
+
+    @Override
+    public RandomAccessReader WithByteOrder(boolean isMotorolaByteOrder) {
+        return null;
+    }
+
     /**
      * Ensures that the buffered bytes extend to cover the specified index. If not, an attempt is made
      * to read to that point.

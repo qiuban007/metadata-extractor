@@ -442,4 +442,10 @@ public abstract class RandomAccessReader
             System.arraycopy(buffer, 0, bytes, 0, length);
         return bytes;
     }
+
+    @NotNull
+    public abstract RandomAccessReader WithShiftedBaseOffset(int shift);
+
+    @NotNull
+    public abstract RandomAccessReader WithByteOrder(boolean isMotorolaByteOrder);
 }

@@ -44,10 +44,24 @@ public class ByteArrayReader extends RandomAccessReader
     @com.drew.lang.annotations.SuppressWarnings(value = "EI_EXPOSE_REP2", justification = "Design intent")
     public ByteArrayReader(@NotNull byte[] buffer)
     {
-        this(buffer, 0);
+
+        this(buffer, 0,true);
     }
 
     @SuppressWarnings({ "ConstantConditions" })
+    @com.drew.lang.annotations.SuppressWarnings(value = "EI_EXPOSE_REP2", justification = "Design intent")
+    public ByteArrayReader(@NotNull byte[] buffer, int baseOffset,boolean _isMotorolaByteOrder)
+    {
+        super();
+        this.setMotorolaByteOrder(_isMotorolaByteOrder);
+        if (buffer == null)
+            throw new NullPointerException();
+        if (baseOffset < 0)
+            throw new IllegalArgumentException("Must be zero or greater");
+
+        _buffer = buffer;
+        _baseOffset = baseOffset;
+    }
     @com.drew.lang.annotations.SuppressWarnings(value = "EI_EXPOSE_REP2", justification = "Design intent")
     public ByteArrayReader(@NotNull byte[] buffer, int baseOffset)
     {
@@ -70,6 +84,24 @@ public class ByteArrayReader extends RandomAccessReader
     public long getLength()
     {
         return _buffer.length - _baseOffset;
+    }
+
+    @Override
+    public RandomAccessReader WithShiftedBaseOffset(int shift) {
+        if (shift == 0) {
+            return this;
+        } else {
+            return new ByteArrayReader(_buffer, _baseOffset + shift, isMotorolaByteOrder());
+        }
+    }
+
+    @Override
+    public RandomAccessReader WithByteOrder(boolean isMotorolaByteOrder) {
+        if (isMotorolaByteOrder == this.isMotorolaByteOrder()) {
+            return this;
+        } else {
+            return new ByteArrayReader(_buffer, _baseOffset, isMotorolaByteOrder);
+        }
     }
 
     @Override

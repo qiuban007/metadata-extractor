@@ -73,6 +73,16 @@ public class RandomAccessFileReader extends RandomAccessReader
     }
 
     @Override
+    public RandomAccessReader WithShiftedBaseOffset(int shift) {
+        return null;
+    }
+
+    @Override
+    public RandomAccessReader WithByteOrder(boolean isMotorolaByteOrder) {
+        return null;
+    }
+
+    @Override
     public byte getByte(int index) throws IOException
     {
         if (index != _currentIndex)
