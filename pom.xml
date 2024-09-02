@@ -13,12 +13,12 @@
     </parent>
 
     <groupId>com.drewnoakes</groupId>
-    <artifactId>metadata-extractor</artifactId>
-    <version>2.19.0</version>
+    <artifactId>metadata-extractor-fa</artifactId>
+    <version>2.19.1</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java library for extracting EXIF, IPTC, XMP, ICC and other metadata from image and video files.</description>
+    <description>Java library for extracting EXIF, IPTC, XMP, ICC ,FLIR and other metadata from image and video files.</description>
 
     <url>https://drewnoakes.com/code/exif/</url>
 

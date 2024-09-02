@@ -10,6 +10,7 @@ import com.drew.metadata.MetadataReader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.time.Instant;
@@ -94,8 +95,8 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
                 int dataLength = reader.getInt32(indexOffset + 16);
                 if (mainType == FlirMainTagType.PIXELS) {
                     RandomAccessReader reader2 = reader.WithShiftedBaseOffset(dataOffset);
-                    short int16 = reader2.getInt16(0);
-                    if (int16 > 0x0100)
+                    short marker = reader2.getInt16(0);
+                    if (marker > 0x0100)
                         reader2 = reader2.WithByteOrder(!reader2.isMotorolaByteOrder());
                     FlirRawDataDirectory rawDataDirectory = new FlirRawDataDirectory();
 
@@ -137,15 +138,15 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
 
                     infoDirectory.setFloat(TAG_RELATIVE_HUMIDITY, reader3.getFloat32(TAG_RELATIVE_HUMIDITY));
 
-                    infoDirectory.setFloat(TAG_PLANCK_R1, reader3.getFloat32(TAG_PLANCK_R1));
-                    infoDirectory.setFloat(TAG_PLANCK_B, reader3.getFloat32(TAG_PLANCK_B));
-                    infoDirectory.setFloat(TAG_PLANCK_F, reader3.getFloat32(TAG_PLANCK_F));
+                    infoDirectory.setString(TAG_PLANCK_R1, new BigDecimal(reader3.getFloat32(TAG_PLANCK_R1)).toPlainString());
+                    infoDirectory.setString(TAG_PLANCK_B, new BigDecimal(reader3.getFloat32(TAG_PLANCK_B)).toPlainString());
+                    infoDirectory.setString(TAG_PLANCK_F, new BigDecimal(reader3.getFloat32(TAG_PLANCK_F)).toPlainString());
 
-                    infoDirectory.setFloat(TAG_ATMOSPHERIC_TRANS_ALPHA1, reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_ALPHA1));
-                    infoDirectory.setFloat(TAG_ATMOSPHERIC_TRANS_ALPHA2, reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_ALPHA2));
-                    infoDirectory.setFloat(TAG_ATMOSPHERIC_TRANS_BETA1, reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_BETA1));
-                    infoDirectory.setFloat(TAG_ATMOSPHERIC_TRANS_BETA2, reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_BETA2));
-                    infoDirectory.setFloat(TAG_ATMOSPHERIC_TRANS_X, reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_X));
+                    infoDirectory.setString(TAG_ATMOSPHERIC_TRANS_ALPHA1, new BigDecimal(reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_ALPHA1)).toPlainString());
+                    infoDirectory.setString(TAG_ATMOSPHERIC_TRANS_ALPHA2, new BigDecimal(reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_ALPHA2)).toPlainString());
+                    infoDirectory.setString(TAG_ATMOSPHERIC_TRANS_BETA1, new BigDecimal(reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_BETA1)).toPlainString());
+                    infoDirectory.setString(TAG_ATMOSPHERIC_TRANS_BETA2, new BigDecimal(reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_BETA2)).toPlainString());
+                    infoDirectory.setString(TAG_ATMOSPHERIC_TRANS_X, new BigDecimal(reader3.getFloat32(TAG_ATMOSPHERIC_TRANS_X)).toPlainString());
 
                     infoDirectory.setFloat(TAG_CAMERA_TEMPERATURE_RANGE_MAX, reader3.getFloat32(TAG_CAMERA_TEMPERATURE_RANGE_MAX));
                     infoDirectory.setFloat(TAG_CAMERA_TEMPERATURE_RANGE_MIN, reader3.getFloat32(TAG_CAMERA_TEMPERATURE_RANGE_MIN));
@@ -172,7 +173,7 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
                     infoDirectory.setStringValue(TAG_FILTER_SERIAL_NUMBER, reader3.getNullTerminatedStringValue(TAG_FILTER_SERIAL_NUMBER, 32, null));
 
                     infoDirectory.setInt(TAG_PLANCK_O, reader3.getInt32(TAG_PLANCK_O));
-                    infoDirectory.setFloat(TAG_PLANCK_R2, reader3.getFloat32(TAG_PLANCK_R2));
+                    infoDirectory.setString(TAG_PLANCK_R2, new BigDecimal(reader3.getFloat32(TAG_PLANCK_R2)).toPlainString());
 
                     infoDirectory.setInt(TAG_RAW_VALUE_RANGE_MIN, reader3.getUInt16(TAG_RAW_VALUE_RANGE_MIN));
                     infoDirectory.setInt(TAG_RAW_VALUE_RANGE_MAX, reader3.getUInt16(TAG_RAW_VALUE_RANGE_MAX));

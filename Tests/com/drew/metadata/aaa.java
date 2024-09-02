@@ -2,17 +2,21 @@ package com.drew.metadata;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.flir.FlirCameraInfoDirectory;
 import com.drew.metadata.flir.FlirRawDataDirectory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class aaa {
     public static void main(String[] args) throws ImageProcessingException, IOException {
         Metadata metadata = ImageMetadataReader.readMetadata(new File("E:\\1.jpg"));
         FlirRawDataDirectory flirRawDataDirectory = metadata.getFirstDirectoryOfType(FlirRawDataDirectory.class);
         byte[] byteArray = flirRawDataDirectory.getByteArray(FlirRawDataDirectory.TAG_RAW_THERMAL_IMAGE);
+        ExifIFD0Directory exifIFD0Directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+        int anInt = exifIFD0Directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
         FlirCameraInfoDirectory flirCameraInfoDirectory = metadata.getFirstDirectoryOfType(FlirCameraInfoDirectory.class);
         // 遍历并输出 FlirCameraInfoDirectory 中的所有标签
         //for (Tag tag : flirCameraInfoDirectory.getTags()) {
@@ -31,5 +35,11 @@ public class aaa {
                 }
             }
         }
+
+        int bits=1181449311;
+        float f = Float.intBitsToFloat(bits);
+        System.out.println(f);
+        BigDecimal decimal = new BigDecimal(f);
+        System.out.println(decimal.toPlainString());
     }
 }

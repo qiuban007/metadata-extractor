@@ -45,14 +45,13 @@ public class ByteArrayReader extends RandomAccessReader
     public ByteArrayReader(@NotNull byte[] buffer)
     {
 
-        this(buffer, 0,true);
+        this(buffer, 0);
     }
 
     @SuppressWarnings({ "ConstantConditions" })
     @com.drew.lang.annotations.SuppressWarnings(value = "EI_EXPOSE_REP2", justification = "Design intent")
     public ByteArrayReader(@NotNull byte[] buffer, int baseOffset,boolean _isMotorolaByteOrder)
     {
-        super();
         this.setMotorolaByteOrder(_isMotorolaByteOrder);
         if (buffer == null)
             throw new NullPointerException();
