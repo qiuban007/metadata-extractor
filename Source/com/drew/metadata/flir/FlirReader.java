@@ -192,6 +192,7 @@ public class FlirReader implements JpegSegmentMetadataReader, MetadataReader {
                     OffsetDateTime dateTime = OffsetDateTime.ofInstant(Instant.ofEpochSecond(tm - tz * 60),
                         ZoneOffset.ofTotalSeconds(tz * 60)).plusSeconds(ss / 1000);
                     infoDirectory.setDate(TAG_DATE_TIME_ORIGINAL, Date.from(dateTime.toInstant()));
+
                     infoDirectory.setInt(TAG_FOCUS_STEP_COUNT, reader3.getUInt16(TAG_FOCUS_STEP_COUNT));
                     infoDirectory.setFloat(TAG_FOCUS_DISTANCE, reader3.getFloat32(TAG_FOCUS_DISTANCE));
                     infoDirectory.setInt(TAG_FRAME_RATE, reader3.getUInt16(TAG_FRAME_RATE));

@@ -29,17 +29,18 @@ public class aaa {
                 System.out.println(tag.getTagName() + " : " + tag.getDescription());
             }
             // 如果存在错误，则输出错误信息
-            if (directory.hasErrors()) {
-                for (String error : directory.getErrors()) {
-                    System.err.println("ERROR: " + error);
-                }
-            }
+            //if (directory.hasErrors()) {
+            //    for (String error : directory.getErrors()) {
+            //        System.err.println("ERROR: " + error);
+            //    }
+            //}
         }
 
-        int bits=1181449311;
+        int bits = 1065353216;
         float f = Float.intBitsToFloat(bits);
-        System.out.println(f);
+        System.out.println("f=" + f);
         BigDecimal decimal = new BigDecimal(f);
-        System.out.println(decimal.toPlainString());
+        System.out.println("decimal=" + decimal.toPlainString());
+
     }
 }
